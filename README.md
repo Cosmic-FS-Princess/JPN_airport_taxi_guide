@@ -103,8 +103,9 @@ Set it up once under **Settings → Pages → Source: Deploy from a branch → B
 `(root)`**. Run the two commands again after each change.
 
 The custom domain is `public/CNAME` (`jpntaxi.xn--3ckue.jp`, i.e. `jpntaxi.ソラ.jp`); Vite copies it
-into `dist/CNAME`, and the apex A/AAAA records point at GitHub Pages. For a different domain, edit
-that file (punycode for internationalised names) and update the DNS records.
+into `dist/CNAME`. DNS points the apex domain at the Pages site through Cloudflare, which terminates
+TLS for visitors. For a different domain, edit that file (punycode for internationalised names) and
+update the DNS records.
 
 If you prefer GitHub Actions instead, add a workflow that runs `pnpm install --frozen-lockfile`,
 `pnpm test` and `pnpm build`, uploads `dist/` and deploys it with `actions/deploy-pages`, then set
