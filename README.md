@@ -10,6 +10,10 @@ available in **English** and **Japanese**; the chooser passes the selected langu
 
 ![Airport chooser](docs/chooser.png)
 
+On a phone the airport cards stack into one column:
+
+<img src="docs/chooser-mobile.png" alt="Airport chooser on a phone" width="320" />
+
 > For flight simulation only. Not for real-world navigation. ATC instructions always take precedence.
 
 ## The two guides
