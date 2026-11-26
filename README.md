@@ -4,6 +4,8 @@ An Apple-style, full-screen taxi route guide for the two Tokyo airports — **Ha
 **Narita (RJAA)** — built for flight simulation. The site opens on an airport chooser; each guide
 keeps its own map, runway configurations, stands and published taxi logic.
 
+**Live:** <https://jpntaxi.ソラ.jp/> (punycode `jpntaxi.xn--3ckue.jp`)
+
 Pick a runway configuration, a runway, a stand and (optionally) a runway exit or entry point, and the
 guide draws the standard taxi route on a gridded airport map with turn-by-turn steps. The UI is
 available in **English** and **Japanese**; the chooser passes the selected language on to the guide.
@@ -98,8 +100,11 @@ pnpm publish:pages   # force-pushes dist/ (plus .nojekyll) to gh-pages
 ```
 
 Set it up once under **Settings → Pages → Source: Deploy from a branch → Branch: `gh-pages` /
-`(root)`**. Run the two commands again after each change. For a custom domain, add it in the same
-Pages settings; no `CNAME` file is needed because the build uses relative asset paths.
+`(root)`**. Run the two commands again after each change.
+
+The custom domain is `public/CNAME` (`jpntaxi.xn--3ckue.jp`, i.e. `jpntaxi.ソラ.jp`); Vite copies it
+into `dist/CNAME`, and the apex A/AAAA records point at GitHub Pages. For a different domain, edit
+that file (punycode for internationalised names) and update the DNS records.
 
 If you prefer GitHub Actions instead, add a workflow that runs `pnpm install --frozen-lockfile`,
 `pnpm test` and `pnpm build`, uploads `dist/` and deploys it with `actions/deploy-pages`, then set
