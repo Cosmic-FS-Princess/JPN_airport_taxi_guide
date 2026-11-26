@@ -10,7 +10,6 @@ const S = {
   pageTitle: { en: "Japan Airport Taxi Guides — Haneda & Narita", ja: "日本の空港タクシーガイド — 羽田・成田" },
   langLabel: { en: "Language", ja: "言語" },
   airportsLabel: { en: "Airport taxi guides", ja: "空港タクシーガイド" },
-  eyebrow: { en: "Flight simulation · Japan", ja: "フライトシミュレーション · 日本" },
   heading: { en: "Airport taxi guides", ja: "空港タクシーガイド" },
   lede: {
     en: "Haneda and Narita, one guide each. Pick an airport for standard arrival and departure taxi routes, runway exits, apron gateways and turn-by-turn taxiing.",
