@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="color-scheme" content="light dark" />
+    <meta
+      name="description"
+      content="RJTT Tokyo Haneda taxi route guide for flight simulation: runway configurations, standard departure routes, runway exits and turn-by-turn taxiing."
+    />
+    <title>Haneda Taxi Guide</title>
+    <link rel="icon" type="image/png" href="../assets/RJTT-D6wshsZ2.png" />
+    <link rel="apple-touch-icon" href="../assets/RJTT-D6wshsZ2.png" />
+    <script type="module" crossorigin src="../assets/haneda-ZLk7GVsN.js"></script>
+    <link rel="modulepreload" crossorigin href="../assets/style-3ujmBzLC.js">
+    <link rel="stylesheet" crossorigin href="../assets/style-tpz-LRPY.css">
+  </head>
+  <body>
+    <div id="app">
+      <div id="map-wrap">
+        <svg id="map" data-i18n-aria="mapLabel"></svg>
+        <div id="rulers" aria-hidden="true"></div>
+        <div id="tooltip" role="status"></div>
+      </div>
+
+      <div class="map-controls glass">
+        <button id="zoom-in" data-i18n-title="zoomIn">
+          <svg viewBox="0 0 20 20"><path d="M10 4v12M4 10h12" /></svg>
+        </button>
+        <hr />
+        <button id="zoom-out" data-i18n-title="zoomOut">
+          <svg viewBox="0 0 20 20"><path d="M4 10h12" /></svg>
+        </button>
+      </div>
+      <div class="map-controls glass second">
+        <button id="fit" data-i18n-title="fitAll">
+          <svg viewBox="0 0 20 20"><path d="M3 7V3h4M13 3h4v4M17 13v4h-4M7 17H3v-4" /></svg>
+        </button>
+        <hr />
+        <button id="grid-toggle" data-i18n-title="grid" aria-pressed="true">
+          <svg viewBox="0 0 20 20"><path d="M3 3h14v14H3zM3 10h14M10 3v14" /></svg>
+        </button>
+        <hr />
+        <button id="layers" data-i18n-title="basemap" aria-haspopup="menu" aria-expanded="false">
+          <svg viewBox="0 0 20 20"><path d="M10 3 2.5 7 10 11l7.5-4L10 3ZM2.5 10.5 10 14.5l7.5-4M2.5 14 10 18l7.5-4" /></svg>
+        </button>
+      </div>
+      <div id="layer-menu" class="glass" role="menu" hidden>
+        <div class="menu-title" data-i18n="basemap"></div>
+        <button role="menuitemradio" data-base="pale"><span class="swatch pale"></span><span data-i18n="baseMap"></span></button>
+        <button role="menuitemradio" data-base="photo"><span class="swatch photo"></span><span data-i18n="basePhoto"></span></button>
+        <button role="menuitemradio" data-base="none"><span class="swatch none"></span><span data-i18n="baseNone"></span></button>
+      </div>
+      <div id="disclaimer"><span data-i18n="simDisclaimer"></span></div>
+      <div id="attribution">
+        <div class="row"><a href="https://maps.gsi.go.jp/development/ichiran.html" target="_blank" rel="noopener" data-i18n="gsiCredit"></a><span class="sep"> · </span><a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">© OpenStreetMap</a></div>
+        <div class="row"><span data-i18n="authorCredit"></span> <a href="https://github.com/lpxlpx7" target="_blank" rel="noopener">lpxlpx7</a><span class="sep"> · </span><a href="https://github.com/xiaotian7196" target="_blank" rel="noopener">xiaotian7196</a><span class="sep"> · </span><a href="https://github.com/Cosmic-FS-Princess/JPN_airport_taxi_guide" target="_blank" rel="noopener" data-i18n="repoCredit"></a></div>
+      </div>
+      <div id="compass" class="glass" aria-hidden="true">N</div>
+      <div id="scale" aria-hidden="true"><div id="scale-bar"></div><span id="scale-label"></span></div>
+
+      <aside id="panel" class="glass">
+        <div class="grabber" aria-hidden="true"></div>
+        <a class="backlink" href="../">
+          <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M12.5 5 7.5 10l5 5" /></svg>
+          <span data-i18n="allAirports"></span>
+        </a>
+        <header>
+          <img class="app-icon" src="data:image/png;base64,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" alt="" width="44" height="44" />
+          <div class="titles">
+            <div class="eyebrow" data-i18n="eyebrow"></div>
+            <h1 data-i18n="title"></h1>
+          </div>
+          <div class="segmented lang" id="lang" role="tablist" aria-label="Language"></div>
+        </header>
+
+        <div class="segmented" id="mode" role="tablist"></div>
+
+        <section>
+          <h2 data-i18n="flow"></h2>
+          <div class="segmented small" id="flow"></div>
+          <p class="hint" id="flow-hint"></p>
+        </section>
+
+        <section>
+          <h2 data-i18n="runway"></h2>
+          <div class="segmented" id="runway"></div>
+        </section>
+
+        <section>
+          <h2 data-i18n="stand"></h2>
+          <label class="search">
+            <svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5.5" /><path d="M13 13l4 4" /></svg>
+            <input id="stand-search" type="search" data-i18n-placeholder="search" autocomplete="off" />
+          </label>
+          <div id="stands" class="stands"></div>
+        </section>
+
+        <section>
+          <h2 id="point-title"></h2>
+          <div id="points" class="chips"></div>
+        </section>
+
+        <section id="result"></section>
+
+        <footer data-i18n="footer"></footer>
+      </aside>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="color-scheme" content="light dark" />
+    <meta
+      name="description"
+      content="Taxi route guides for Tokyo Haneda (RJTT) and Narita (RJAA): standard departure routes, runway exits, apron gateways and turn-by-turn taxiing on a gridded airport map. For flight simulation."
+    />
+    <meta property="og:title" content="Japan Airport Taxi Guides — Haneda &amp; Narita" />
+    <meta
+      property="og:description"
+      content="Choose Haneda or Narita for standard arrival and departure taxi routes, runway exits and turn-by-turn taxiing. For flight simulation."
+    />
+    <meta property="og:type" content="website" />
+    <title>Japan Airport Taxi Guides — Haneda &amp; Narita</title>
+    <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
+    <script type="module" crossorigin src="./assets/chooser-CmKUPcjA.js"></script>
+    <link rel="modulepreload" crossorigin href="./assets/style-3ujmBzLC.js">
+    <link rel="stylesheet" crossorigin href="./assets/style-tpz-LRPY.css">
+    <link rel="stylesheet" crossorigin href="./assets/chooser-DDk-y9GQ.css">
+  </head>
+  <body class="chooser">
+    <main class="chooser">
+      <header class="topbar">
+        <div class="segmented lang" id="lang" role="tablist" data-i18n-aria="langLabel"></div>
+      </header>
+
+      <section class="hero">
+        <h1 data-i18n="heading">Airport taxi guides</h1>
+        <p class="lede" data-i18n="lede">
+          Haneda and Narita, one guide each. Pick an airport for standard arrival and departure taxi routes, runway
+          exits, apron gateways and turn-by-turn taxiing.
+        </p>
+      </section>
+
+      <nav class="airports" data-i18n-aria="airportsLabel" aria-label="Airport taxi guides">
+        <a class="airport glass" href="./haneda/" data-airport="haneda" aria-labelledby="haneda-name">
+          <div class="map-thumb" data-preview="haneda"></div>
+          <div class="airport-body">
+            <div class="airport-head">
+              <img class="app-icon" src="data:image/png;base64,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" alt="" width="46" height="46" />
+              <div class="names">
+                <p class="code" data-i18n="hanedaCode">RJTT · Tokyo International</p>
+                <h2 id="haneda-name" data-i18n="hanedaName">Haneda</h2>
+              </div>
+            </div>
+            <p class="desc" data-i18n="hanedaDesc">
+              Four runways on Tokyo Bay. North- and south-wind configurations, three terminals, and published exits and
+              entries for every runway.
+            </p>
+            <div class="tags">
+              <span class="tag" data-i18n="tagRunways4">4 runways</span>
+              <span class="tag" data-i18n="tagTerminals3">3 terminals</span>
+              <span class="tag" data-i18n="tagFlows">North / South</span>
+            </div>
+            <span class="open"
+              ><span data-i18n="openGuide">Open guide</span
+              ><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h11M11 5l5 5-5 5" /></svg
+            ></span>
+          </div>
+        </a>
+
+        <a class="airport glass" href="./narita/" data-airport="narita" aria-labelledby="narita-name">
+          <div class="map-thumb" data-preview="narita"></div>
+          <div class="airport-body">
+            <div class="airport-head">
+              <img class="app-icon" src="./assets/RJAA-BCY5g2MQ.png" alt="" width="46" height="46" />
+              <div class="names">
+                <p class="code" data-i18n="naritaCode">RJAA · Narita International</p>
+                <h2 id="narita-name" data-i18n="naritaName">Narita</h2>
+              </div>
+            </div>
+            <p class="desc" data-i18n="naritaDesc">
+              Parallel 16R/34R and 16L/34L. AIP Japan departure routes, apron gateways, and CAT II/III low-visibility
+              taxiing.
+            </p>
+            <div class="tags">
+              <span class="tag" data-i18n="tagRunways2">2 runways</span>
+              <span class="tag" data-i18n="tagTerminals3">3 terminals</span>
+              <span class="tag" data-i18n="tagLvp">CAT II/III</span>
+            </div>
+            <span class="open"
+              ><span data-i18n="openGuide">Open guide</span
+              ><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h11M11 5l5 5-5 5" /></svg
+            ></span>
+          </div>
+        </a>
+      </nav>
+
+      <footer class="chooser-footer">
+        <p data-i18n="simDisclaimer">
+          For flight simulation only. Not for real-world navigation — ATC instructions always take precedence.
+        </p>
+        <p class="credits">
+          <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">© OpenStreetMap</a>
+          <span class="sep">·</span>
+          <a href="https://maps.gsi.go.jp/development/ichiran.html" target="_blank" rel="noopener" data-i18n="gsiCredit"
+            >GSI Tiles</a
+          >
+          <span class="sep">·</span>
+          <a
+            href="https://github.com/Cosmic-FS-Princess/JPN_airport_taxi_guide"
+            target="_blank"
+            rel="noopener"
+            data-i18n="repo"
+            >Source on GitHub</a
+          >
+        </p>
+      </footer>
+    </main>
+  </body>
+</html>
