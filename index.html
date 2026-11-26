@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="color-scheme" content="light dark" />
+    <meta
+      name="description"
+      content="Taxi route guides for Tokyo Haneda (RJTT) and Narita (RJAA): standard departure routes, runway exits, apron gateways and turn-by-turn taxiing on a gridded airport map. For flight simulation."
+    />
+    <meta property="og:title" content="Japan Airport Taxi Guides — Haneda &amp; Narita" />
+    <meta
+      property="og:description"
+      content="Choose Haneda or Narita for standard arrival and departure taxi routes, runway exits and turn-by-turn taxiing. For flight simulation."
+    />
+    <meta property="og:type" content="website" />
+    <title>Japan Airport Taxi Guides — Haneda &amp; Narita</title>
+    <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
+  </head>
+  <body class="chooser">
+    <div class="chooser-bg" aria-hidden="true"></div>
+    <main class="chooser">
+      <header class="topbar">
+        <a class="brand" href="./">
+          <span class="brand-mark" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M7 20 17 4M4 9h16" /></svg>
+          </span>
+          <span class="brand-name">JPN · Taxi Guides</span>
+        </a>
+        <div class="segmented lang" id="lang" role="tablist" data-i18n-aria="langLabel"></div>
+      </header>
+
+      <section class="hero">
+        <p class="eyebrow" data-i18n="eyebrow">Flight simulation · Japan</p>
+        <h1 data-i18n="heading">Airport taxi guides</h1>
+        <p class="lede" data-i18n="lede">
+          Haneda and Narita, one guide each. Pick an airport for standard arrival and departure taxi routes, runway
+          exits, apron gateways and turn-by-turn taxiing.
+        </p>
+      </section>
+
+      <nav class="airports" data-i18n-aria="airportsLabel" aria-label="Airport taxi guides">
+        <a class="airport glass" href="./haneda/" data-airport="haneda" aria-labelledby="haneda-name">
+          <div class="map-thumb" data-preview="haneda"></div>
+          <div class="airport-body">
+            <div class="airport-head">
+              <img class="app-icon" src="./haneda/RJTT.png" alt="" width="46" height="46" />
+              <div class="names">
+                <p class="code" data-i18n="hanedaCode">RJTT · Tokyo International</p>
+                <h2 id="haneda-name" data-i18n="hanedaName">Haneda</h2>
+              </div>
+            </div>
+            <p class="desc" data-i18n="hanedaDesc">
+              Four runways on Tokyo Bay. North- and south-wind configurations, three terminals, and published exits and
+              entries for every runway.
+            </p>
+            <div class="tags">
+              <span class="tag" data-i18n="tagRunways4">4 runways</span>
+              <span class="tag" data-i18n="tagTerminals3">3 terminals</span>
+              <span class="tag" data-i18n="tagFlows">North / South</span>
+            </div>
+            <span class="open"
+              ><span data-i18n="openGuide">Open guide</span
+              ><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h11M11 5l5 5-5 5" /></svg
+            ></span>
+          </div>
+        </a>
+
+        <a class="airport glass" href="./narita/" data-airport="narita" aria-labelledby="narita-name">
+          <div class="map-thumb" data-preview="narita"></div>
+          <div class="airport-body">
+            <div class="airport-head">
+              <img class="app-icon" src="./narita/RJAA.png" alt="" width="46" height="46" />
+              <div class="names">
+                <p class="code" data-i18n="naritaCode">RJAA · Narita International</p>
+                <h2 id="narita-name" data-i18n="naritaName">Narita</h2>
+              </div>
+            </div>
+            <p class="desc" data-i18n="naritaDesc">
+              Parallel 16R/34R and 16L/34L. AIP Japan departure routes, apron gateways, and CAT II/III low-visibility
+              taxiing.
+            </p>
+            <div class="tags">
+              <span class="tag" data-i18n="tagRunways2">2 runways</span>
+              <span class="tag" data-i18n="tagTerminals3">3 terminals</span>
+              <span class="tag" data-i18n="tagLvp">CAT II/III</span>
+            </div>
+            <span class="open"
+              ><span data-i18n="openGuide">Open guide</span
+              ><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h11M11 5l5 5-5 5" /></svg
+            ></span>
+          </div>
+        </a>
+      </nav>
+
+      <footer class="chooser-footer">
+        <p data-i18n="simDisclaimer">
+          For flight simulation only. Not for real-world navigation — ATC instructions always take precedence.
+        </p>
+        <p class="credits">
+          <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">© OpenStreetMap</a>
+          <span class="sep">·</span>
+          <a href="https://maps.gsi.go.jp/development/ichiran.html" target="_blank" rel="noopener" data-i18n="gsiCredit"
+            >GSI Tiles</a
+          >
+          <span class="sep">·</span>
+          <a
+            href="https://github.com/Cosmic-FS-Princess/JPN_airport_taxi_guide"
+            target="_blank"
+            rel="noopener"
+            data-i18n="repo"
+            >Source on GitHub</a
+          >
+        </p>
+      </footer>
+    </main>
+    <script type="module" src="./src/chooser.ts"></script>
+  </body>
+</html>

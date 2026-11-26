@@ -1,0 +1,31 @@
+{
+  "name": "jpn-airport-taxi-guide",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Combined taxi route guides for Tokyo Haneda (RJTT) and Narita (RJAA): choose an airport, then follow standard arrival and departure taxi routes on a gridded airport map. For flight simulation.",
+  "type": "module",
+  "packageManager": "pnpm@11.28.5",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "test": "node haneda/scripts/test-routes.ts && node narita/scripts/test-routes.ts",
+    "test:haneda": "node haneda/scripts/test-routes.ts",
+    "test:narita": "node narita/scripts/test-routes.ts",
+    "test:extras": "node narita/scripts/test-all.ts && node haneda/scripts/test-loops.ts && node narita/scripts/test-loops.ts",
+    "test:loops": "node haneda/scripts/test-loops.ts && node narita/scripts/test-loops.ts",
+    "previews": "node scripts/make-previews.mjs",
+    "publish:pages": "node scripts/publish-pages.mjs",
+    "data:haneda": "node haneda/scripts/build-data.ts",
+    "data:narita": "node narita/scripts/build-data.ts",
+    "fetch:osm:haneda": "node haneda/scripts/fetch-osm.ts",
+    "fetch:osm:narita": "node narita/scripts/fetch-osm.ts",
+    "extract:navdata:haneda": "node haneda/scripts/extract-navdata.ts",
+    "extract:navdata:narita": "node narita/scripts/extract-navdata.ts"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "typescript": "~5.7.2",
+    "vite": "^6.0.7"
+  }
+}

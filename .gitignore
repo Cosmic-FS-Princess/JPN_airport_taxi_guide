@@ -1,0 +1,15 @@
+node_modules/
+dist/
+
+# local preview / browser automation
+.edgeprofile/
+.shots/
+*.log
+.DS_Store
+
+# local reference material
+JP-AD-2-RJAA-en-JP.pdf
+ts-check.txt
+RJAA.txt
+sweep*.txt
+/live.png
