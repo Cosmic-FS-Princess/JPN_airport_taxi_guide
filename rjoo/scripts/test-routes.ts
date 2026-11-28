@@ -1,45 +1,11 @@
 // Every stand / runway / mode must route without skipping the standard taxiways.
 import { readFileSync } from "node:fs";
-import { Airport, dist, type Stand, type XY } from "../src/airport.ts";
+import { Airport } from "../src/airport.ts";
 import { plan, exitKey, type PlanOption, type PlanRequest } from "../src/plan.ts";
 import { FLOWS } from "../src/procedures.ts";
+import { angle, graphLine, maxReversal } from "../../src/shared/test-helpers.ts";
 
 const ap = new Airport(JSON.parse(readFileSync(new URL("../src/data/rjoo.json", import.meta.url), "utf8")));
-const standPoints = (s: Stand): XY[] => {
-  const pts: XY[] = [];
-  for (let i = 0; i < s.path.length; i += 2) pts.push([s.path[i], s.path[i + 1]]);
-  return pts;
-};
-const graphLine = (o: PlanOption, req: PlanRequest, stand: Stand) => {
-  const leadIn = standPoints(stand).length - 1;
-  return req.mode === "arr" ? o.line.slice(0, o.line.length - leadIn) : o.line.slice(leadIn);
-};
-
-const bearing = (a: XY, b: XY) => Math.atan2(b[0] - a[0], b[1] - a[1]);
-function heading(pts: XY[], i: number, dir: 1 | -1, span: number) {
-  let j = i, acc = 0;
-  while (acc < span && j + dir >= 0 && j + dir < pts.length) {
-    acc += dist(pts[j], pts[j + dir]);
-    j += dir;
-  }
-  return dir === 1 ? bearing(pts[i], pts[j]) : bearing(pts[j], pts[i]);
-}
-function angle(a: XY, b: XY, c: XY) {
-  const ux = b[0] - a[0], uy = b[1] - a[1], vx = c[0] - b[0], vy = c[1] - b[1];
-  const l = Math.hypot(ux, uy) * Math.hypot(vx, vy);
-  if (l < 1e-9) return 0;
-  return (Math.acos(Math.max(-1, Math.min(1, (ux * vx + uy * vy) / l))) * 180) / Math.PI;
-}
-function maxReversal(pts: XY[]) {
-  let worst = { degrees: 0, at: 0 };
-  for (let i = 1; i < pts.length - 1; i++) {
-    if (dist(pts[0], pts[i]) < 90 || dist(pts[i], pts[pts.length - 1]) < 90) continue;
-    let d = Math.abs(((heading(pts, i, 1, 90) - heading(pts, i, -1, 90)) * 180) / Math.PI) % 360;
-    if (d > 180) d = 360 - d;
-    if (d > worst.degrees) worst = { degrees: d, at: i };
-  }
-  return worst;
-}
 
 let failures = 0;
 const fail = (message: string) => { failures++; console.log(`FAIL ${message}`); };
@@ -64,7 +30,7 @@ for (const f of FLOWS) {
         for (const o of opts) {
           if (o.missed.length) fail(`skipped ${o.missed.join(",")}: ${label}`);
           if (o.length < 100) fail(`implausible length ${Math.round(o.length)}m: ${label}`);
-          const line = graphLine(o, req, stand);
+          const line = graphLine(o.line, req.mode, stand);
           const reversal = maxReversal(line);
           // A wide taxiway curve may reverse the net heading; a cusp may not.
           if (reversal.degrees > 130 && angle(line[reversal.at - 1], line[reversal.at], line[reversal.at + 1]) > 105) {

@@ -1,7 +1,6 @@
 // Full-screen SVG airport map: pan / zoom, chart grid, taxiway signs, stands, route.
 import { Airport, dist, toLatLon, toLocal, type RunwayEnd, type XY } from "./airport.ts";
-import type { PlanOption } from "./plan.ts";
-import { t } from "./i18n.ts";
+import type { BasePlanOption } from "./plan.ts";
 
 const NS = "http://www.w3.org/2000/svg";
 const CELL = 500; // grid cell, metres
@@ -41,6 +40,13 @@ const tile2lat = (y: number, z: number) => (Math.atan(Math.sinh(Math.PI * (1 - (
 export interface Bounds { x0: number; y0: number; x1: number; y1: number }
 export interface MapPoint { key: string; label: string; at: XY; anchor: XY }
 
+export interface MapLabels {
+  altText: (summary: string) => string;
+  crossTitle: (rw: string) => string;
+  gatewayMap?: (ref: string) => string;
+  standGroupLabel?: (group: string) => string;
+}
+
 export class MapView {
   private svg: SVGSVGElement;
   private world: SVGGElement;
@@ -56,6 +62,7 @@ export class MapView {
   private rulers: HTMLElement;
   private tooltip: HTMLElement;
   private ap: Airport;
+  private labels: MapLabels;
   private k = 0.2;
   private tx = 0;
   private ty = 0;
@@ -67,11 +74,12 @@ export class MapView {
   onPoint: (key: string) => void = () => {};
   onAlt: (i: number) => void = () => {};
 
-  constructor(svg: SVGSVGElement, rulers: HTMLElement, tooltip: HTMLElement, ap: Airport) {
+  constructor(svg: SVGSVGElement, rulers: HTMLElement, tooltip: HTMLElement, ap: Airport, labels: MapLabels) {
     this.svg = svg;
     this.rulers = rulers;
     this.tooltip = tooltip;
     this.ap = ap;
+    this.labels = labels;
     this.bounds = this.computeBounds();
     const b = this.bounds;
     this.grid = {
@@ -202,21 +210,24 @@ export class MapView {
 
   private drawStands() {
     for (const s of this.ap.data.stands) {
-      const g = el("g", { transform: `translate(${pt([s.x, s.y])})`, class: "stand-g", "data-ref": s.ref }, this.standsG);
+      const g = el("g", { transform: `translate(${pt([s.x, s.y])})`, class: "stand-g", "data-ref": s.ref, "data-group": s.group }, this.standsG);
       const inner = el("g", { class: "scaled" }, g);
       el("circle", { r: 9, class: "stand-hit" }, inner);
       el("circle", { r: 3.6, class: "stand-dot" }, inner);
       el("text", { y: 13, class: "stand-lbl" }, inner).textContent = s.ref;
-      el("title", {}, g).textContent = `Spot ${s.ref} · ${t("groupMain")}`;
+      const grp = this.labels.standGroupLabel ? this.labels.standGroupLabel(s.group) : s.group;
+      el("title", {}, g).textContent = `Spot ${s.ref} · ${grp}`;
       g.addEventListener("click", (e) => { e.stopPropagation(); this.onStand(s.ref); });
     }
   }
 
   refreshStandLabels() {
+    if (!this.labels.standGroupLabel) return;
     this.standsG.querySelectorAll<SVGGElement>(".stand-g").forEach((g) => {
       const ref = g.getAttribute("data-ref");
+      const group = g.getAttribute("data-group");
       const title = g.querySelector("title");
-      if (ref && title) title.textContent = `Spot ${ref} · ${t("groupMain")}`;
+      if (ref && group && title) title.textContent = `Spot ${ref} · ${this.labels.standGroupLabel!(group)}`;
     });
   }
 
@@ -267,14 +278,14 @@ export class MapView {
     }
   }
 
-  setRoute(opts: PlanOption[], sel: number) {
+  setRoute(opts: BasePlanOption[], sel: number) {
     this.overlay.querySelectorAll(".route").forEach((e) => e.remove());
     if (!opts.length) return;
     const root = el("g", { class: "route" }, this.overlay);
     opts.forEach((o, i) => {
       if (i === sel) return;
       const p = el("path", { d: poly(o.line), class: "route-alt" }, root);
-      el("title", {}, p).textContent = t("alt", { s: o.summary });
+      el("title", {}, p).textContent = this.labels.altText(o.summary);
       p.addEventListener("click", (e) => { e.stopPropagation(); this.onAlt(i); });
     });
     const o = opts[sel];
@@ -312,7 +323,17 @@ export class MapView {
       const inner = el("g", { class: "scaled" }, g);
       el("rect", { x: -9, y: -9, width: 18, height: 18, rx: 4, transform: "rotate(45)" }, inner);
       el("text", {}, inner).textContent = "!";
-      el("title", {}, g).textContent = t("crossTitle", { r: c.rw });
+      el("title", {}, g).textContent = this.labels.crossTitle(c.rw);
+    }
+    if (o.gateway) {
+      const g = el("g", { transform: `translate(${pt(o.gateway.at)})`, class: "gateway-mark" }, root);
+      const inner = el("g", { class: "scaled" }, g);
+      el("path", { d: "M0,-10 L10,0 L0,10 L-10,0 Z", class: "gate-body" }, inner);
+      el("text", { y: 3.4, class: "gate-letter" }, inner).textContent = "G";
+      const tag = el("g", { transform: "translate(13,-8)", class: "scaled gate-tag" }, g);
+      el("rect", { x: 0, y: 0, width: 8 + o.gateway.ref.length * 7, height: 16, rx: 5 }, tag);
+      el("text", { x: 4, y: 8.4 }, tag).textContent = o.gateway.ref;
+      if (this.labels.gatewayMap) el("title", {}, g).textContent = this.labels.gatewayMap(o.gateway.ref);
     }
     const s = el("g", { transform: `translate(${pt(o.line[0])})`, class: "pin-start" }, root);
     el("circle", { r: 6, class: "scaled" }, s);

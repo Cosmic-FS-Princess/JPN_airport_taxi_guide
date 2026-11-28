@@ -26,7 +26,7 @@ The UI is available in **English** and **Japanese** (switch in the panel header)
 
 ## Getting started
 
-This guide is the Haneda half of the combined [JPN Airport Taxi Guides](../README.md) site: the
+This guide is part of the combined [JPN Airport Taxi Guides](../README.md) site: the
 chooser at the repository root links to it. Install and run once at the repository root:
 
 ```bash
@@ -34,9 +34,9 @@ pnpm install
 pnpm dev
 ```
 
-Chooser and both guides are served together. `pnpm build` produces the static site in `dist/`,
-`pnpm test` routes every flow / runway / terminal combination as a smoke test, and
-`pnpm test:loops` lists routes that wind more than 200° within 400 m. All data the app needs is
+Chooser and all guides are served together. `pnpm build` produces the static site in `dist/`,
+`pnpm test:haneda` routes every flow / runway / terminal combination as a smoke test, and
+`pnpm test:loops` checks routes across all airports. All data the app needs is
 already in the repository, so no X-Plane install is required to run it.
 
 ### Refreshing the data
@@ -103,18 +103,20 @@ does not list one-way restrictions or hot spots.
 
 ## Project layout
 
+Core graph, routing, SVG map and UI controller live in `../src/shared/`; this directory holds the
+Haneda-specific dataset, taxi logic and configuration:
+
 ```
 index.html            app shell
-src/main.ts           UI state and panel rendering
-src/map.ts            SVG map, grid, pan/zoom
-src/router.ts         template-constrained Dijkstra and turn-by-turn steps
-src/plan.ts           selection → routed options
+src/main.ts           guide config calling ../src/shared/guide.ts
+src/airport.ts        RJTT Airport config extending ../src/shared/airport.ts
+src/plan.ts           selection → routed options (with L12 runout & flow rules)
 src/procedures.ts     published taxi routes per runway / terminal
-src/airport.ts        graph model, runway exits and entries
-src/i18n.ts           English / Japanese strings
-scripts/              nav data extract, OSM fetch, data build, route smoke test
+src/i18n.ts           Haneda-specific English / Japanese strings
+src/data/rjtt.json    compiled metric airport graph
+scripts/              nav data extract, OSM fetch, data build, route & loop tests
 data/navdata/         runway records extracted from X-Plane Custom Data
-public/RJTT.png       app icon
+RJTT.png              app icon
 ```
 
 ## Licence
@@ -123,7 +125,7 @@ Copyright (C) 2026 xiaotian7196.
 
 This project is free software, released under the **GNU General Public License, version 2**
 (SPDX: `GPL-2.0-only`). You may copy, modify and redistribute it under the terms of that licence; the
-full text is in [LICENSE](LICENSE).
+full text is in [../LICENSE](../LICENSE).
 
 It is distributed in the hope that it will be useful, but **without any warranty**, without even the
 implied warranty of merchantability or fitness for a particular purpose. See the GNU General Public

@@ -1,4 +1,4 @@
-// Airport chooser: bilingual copy, language switch and the five airport diagrams.
+// Airport chooser: bilingual copy, language switch and the six airport diagrams.
 import "./style.css";
 import "./chooser.css";
 import { PREVIEWS } from "./previews.ts";
@@ -7,13 +7,13 @@ type Lang = "en" | "ja";
 type Text = Record<Lang, string>;
 
 const S = {
-  pageTitle: { en: "Japan Airport Taxi Guides — Haneda, Narita, Itami, Kansai & Naha", ja: "日本の空港タクシーガイド — 羽田・成田・伊丹・関西・那覇" },
+  pageTitle: { en: "Japan Airport Taxi Guides — Haneda, Narita, Itami, Kansai, Naha & New Chitose", ja: "日本の空港タクシーガイド — 羽田・成田・伊丹・関西・那覇・新千歳" },
   langLabel: { en: "Language", ja: "言語" },
   airportsLabel: { en: "Airport taxi guides", ja: "空港タクシーガイド" },
   heading: { en: "Airport taxi guides", ja: "空港タクシーガイド" },
   lede: {
-    en: "Haneda, Narita, Itami, Kansai and Naha, one guide each. Pick an airport for standard arrival and departure taxi routes, runway exits, apron gateways and turn-by-turn taxiing.",
-    ja: "羽田・成田・伊丹・関西・那覇、それぞれのガイドを用意しています。空港を選ぶと、標準の到着・出発タキシールート、離脱誘導路、エプロンゲート、ターンバイターンの指示を地図で確認できます。",
+    en: "Haneda, Narita, Itami, Kansai, Naha and New Chitose, one guide each. Pick an airport for standard arrival and departure taxi routes, runway exits, apron gateways and turn-by-turn taxiing.",
+    ja: "羽田・成田・伊丹・関西・那覇・新千歳、それぞれのガイドを用意しています。空港を選ぶと、標準の到着・出発タキシールート、離脱誘導路、エプロンゲート、ターンバイターンの指示を地図で確認できます。",
   },
   openGuide: { en: "Open guide", ja: "ガイドを開く" },
   hanedaName: { en: "Haneda", ja: "羽田" },
@@ -45,6 +45,12 @@ const S = {
   roahDesc: {
     en: "Inboard 18L/36R and offshore 18R/36L in Okinawa. Seawall J1/J2 bridges, standard runway crossings and domestic, international and cargo aprons.",
     ja: "沖縄の陸側 18L/36R と沖合 18R/36L の並行滑走路。J1/J2 連絡誘導路、標準的な滑走路横断、国内線・国際線・貨物エプロンに対応しています。",
+  },
+  rjccName: { en: "New Chitose", ja: "新千歳" },
+  rjccCode: { en: "RJCC · New Chitose Airport", ja: "RJCC · 新千歳空港" },
+  rjccDesc: {
+    en: "Parallel 01L/19R and 01R/19L in Hokkaido. Standard runway crossings, crescent domestic terminal, international, north remote and cargo aprons.",
+    ja: "北海道の 01L/19R と 01R/19L の並行滑走路。標準的な滑走路横断、半円形の国内線・国際線・北側・貨物エプロンに対応しています。",
   },
   tagRunways4: { en: "4 runways", ja: "滑走路4本" },
   tagRunways2: { en: "2 runways", ja: "滑走路2本" },

@@ -40,6 +40,12 @@ const AIRPORTS = [
     // a standard arrival from offshore Runway 2 across Runway 1: 36L -> Spot 25
     plan: { mode: "arr", flow: "N", runway: "36L", stand: "25" },
   },
+  {
+    key: "rjcc",
+    file: "rjcc/src/data/rjcc.json",
+    // a standard arrival on Runway B across Runway A: 01R -> Domestic Spot 9
+    plan: { mode: "arr", flow: "N", runway: "01R", stand: "9" },
+  },
 ];
 
 async function sampleRoute(key, data, request) {

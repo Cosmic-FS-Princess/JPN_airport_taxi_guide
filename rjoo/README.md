@@ -24,7 +24,7 @@ The UI is available in **English** and **Japanese** (switch in the panel header)
 
 ## Getting started
 
-This guide is the Osaka Itami half of the combined [JPN Airport Taxi Guides](../README.md) site: the
+This guide is part of the combined [JPN Airport Taxi Guides](../README.md) site: the
 chooser at the repository root links to it. Install and run once at the repository root:
 
 ```bash
@@ -103,16 +103,18 @@ together with published charts and simulation community guidelines for RJOO.
 
 ## Project layout
 
+Core graph, routing, SVG map and UI controller live in `../src/shared/`; this directory holds the
+Itami-specific dataset, taxi logic and configuration:
+
 ```
 index.html            app shell
-src/main.ts           UI state and panel rendering
-src/map.ts            SVG map, grid, pan/zoom
-src/router.ts         template-constrained Dijkstra and turn-by-turn steps
-src/plan.ts           selection → routed options
-src/procedures.ts     published taxi routes per runway / terminal
-src/airport.ts        graph model, runway exits and entries
-src/i18n.ts           English / Japanese strings
-scripts/              nav data extract, OSM fetch, data build, route smoke test
+src/main.ts           guide config calling ../src/shared/guide.ts
+src/airport.ts        RJOO Airport config extending ../src/shared/airport.ts
+src/plan.ts           selection → routed options via ../src/shared/plan.ts
+src/procedures.ts     published taxi routes per runway / stand range
+src/i18n.ts           Itami-specific English / Japanese strings
+src/data/rjoo.json    compiled metric airport graph
+scripts/              nav data extract, OSM fetch, data build, route & loop tests
 data/navdata/         runway records extracted from X-Plane Custom Data
 RJOO.png              app icon
 ```
@@ -123,7 +125,7 @@ Copyright (C) 2026 xiaotian7196.
 
 This project is free software, released under the **GNU General Public License, version 2**
 (SPDX: `GPL-2.0-only`). You may copy, modify and redistribute it under the terms of that licence; the
-full text is in [LICENSE](LICENSE).
+full text is in [../LICENSE](../LICENSE).
 
 It is distributed in the hope that it will be useful, but **without any warranty**, without even the
 implied warranty of merchantability or fitness for a particular purpose. See the GNU General Public

@@ -1,32 +1,13 @@
 // Smoke test: every flow / runway / terminal sample must route, follow the
 // published taxiways without skipping any, and not double back on itself.
 import { readFileSync } from "node:fs";
-import { Airport, dist, type XY } from "../src/airport.ts";
+import { Airport } from "../src/airport.ts";
 import { plan } from "../src/plan.ts";
 import { FLOWS } from "../src/procedures.ts";
+import { maxReversal } from "../../src/shared/test-helpers.ts";
 
 const ap = new Airport(JSON.parse(readFileSync(new URL("../src/data/rjaa.json", import.meta.url), "utf8")));
 const sample: Record<string, string> = { T1: "11", T2: "61", T3: "150", T2sat: "441", cargo: "710" };
-
-const bearing = (a: XY, b: XY) => Math.atan2(b[0] - a[0], b[1] - a[1]);
-function heading(pts: XY[], i: number, dir: 1 | -1, span: number) {
-  let j = i, acc = 0;
-  while (acc < span && j + dir >= 0 && j + dir < pts.length) {
-    acc += dist(pts[j], pts[j + dir]);
-    j += dir;
-  }
-  return dir === 1 ? bearing(pts[i], pts[j]) : bearing(pts[j], pts[i]);
-}
-function maxReversal(pts: XY[]): number {
-  let worst = 0;
-  for (let i = 1; i < pts.length - 1; i++) {
-    if (dist(pts[0], pts[i]) < 90 || dist(pts[i], pts[pts.length - 1]) < 90) continue;
-    let d = Math.abs(((heading(pts, i, 1, 90) - heading(pts, i, -1, 90)) * 180) / Math.PI) % 360;
-    if (d > 180) d = 360 - d;
-    worst = Math.max(worst, d);
-  }
-  return worst;
-}
 
 let failures = 0;
 for (const f of FLOWS) {
@@ -38,7 +19,7 @@ for (const f of FLOWS) {
         const o = opts[0];
         if (!o.gateway) { failures++; console.log(`NO GATEWAY ${mode} ${rwy} ${g} ${ref}: ${o.summary}`); }
         if (o.missed.length) { failures++; console.log(`SKIPPED ${mode} ${rwy} ${ref}: ${o.missed}`); }
-        const r = maxReversal(o.line);
+        const r = maxReversal(o.line).degrees;
         if (r > 130) { failures++; console.log(`REVERSES ${mode} ${rwy} ${ref}: ${r.toFixed(0)}° ${o.summary}`); }
         if (o.length < 100) { failures++; console.log(`TOO SHORT ${mode} ${rwy} ${ref}: ${o.length}`); }
       }

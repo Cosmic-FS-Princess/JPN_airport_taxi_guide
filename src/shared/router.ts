@@ -1,9 +1,10 @@
 // Template-constrained shortest path.
-// State = (directed edge, k): k = how many taxiways of the template have been
-// entered. Edges on the current/next template taxiway cost 1x; anything else is
-// allowed but penalised, so the result follows the published flow whenever that
-// is reasonable. The finished path is then checked for detours a taxi clearance
-// would never contain (see findLoop / findHairpin).
+// State = (directed edge, k, [g]): k = how many taxiways of the template have been
+// entered; g = whether an optional mandatory gateway has been passed. Edges on the
+// current/next template taxiway cost 1x; anything else is allowed but penalised, so
+// the result follows the published flow whenever that is reasonable. The finished
+// path is then checked for detours a taxi clearance would never contain (see
+// findLoop / findHairpin).
 import { Airport, dist, type XY } from "./airport.ts";
 
 export interface RouteRequest {
@@ -33,28 +34,17 @@ export interface RouteResult {
   length: number;
   missed: string[];
 }
+export interface RouterHooks {
+  /** extra edge length multiplier (e.g. Narita apron-local and one-way rules) */
+  edgeMultiplier?: (ap: Airport, req: RouteRequest) => (from: number, to: number, ref: number) => number;
+  /** report every template taxiway never touched, even if skipped over */
+  reportAllUnusedVia?: boolean;
+}
 
 const UNNAMED = 1.35;
 const OFF_TEMPLATE = 2.4;
 const CROSSING = 350;
 const OWN_RUNWAY = 1e6;
-
-// T and S (and their numbered pier connectors T3–T10, S1–S7) run along the
-// terminal piers: they are apron taxilanes, meant for the last few hundred metres
-// to a stand. A long transit between apron areas belongs on the through taxiways
-// (C, K), so these are charged extra once far from both ends of the movement.
-const APRON_LOCAL = (ref: string) => ref === "T" || ref === "S" || /^T\d+$/.test(ref) || /^S\d+$/.test(ref);
-const APRON_LOCAL_RADIUS = 650; // m from start or goal where T/S stays free
-const APRON_LOCAL_PENALTY = 2.2;
-
-// C and K are the parallel diagonal through taxiways east of the terminal piers
-// and work as a one-way pair: north-east-bound traffic on C, south-west-bound on
-// K. Picking one for the whole movement (from the direction between its ends)
-// avoids weaving between the two parallels; the other one is only mildly
-// penalised because the published routes and some stand accesses need it.
-const ONE_WAY_MIN_X = 700;
-const ONE_WAY_PENALTY = 1.25;
-const ONE_WAY_MIN_DY = 300;
 
 /** binary min-heap over parallel arrays: one search pushes tens of thousands of entries */
 class Heap {
@@ -168,7 +158,7 @@ function findHairpin(ap: Airport, nodes: number[]): [number, number] | null {
   return null;
 }
 
-export function route(ap: Airport, req: RouteRequest): RouteResult | null {
+export function route(ap: Airport, req: RouteRequest, hooks: RouterHooks = {}): RouteResult | null {
   const n = req.via.length;
   const K = n + 1;
   // the second state bit records whether the mandatory gateway has been passed
@@ -178,6 +168,7 @@ export function route(ap: Airport, req: RouteRequest): RouteResult | null {
   const viaIdx = req.via.map((r) => ap.refs.indexOf(r));
   const avoid = req.avoidRefs ? new Set(req.avoidRefs.map((r) => ap.refs.indexOf(r))) : null;
   const xy = ap.xy;
+  const extraMult = hooks.edgeMultiplier?.(ap, req);
 
   const nodePenalty = (node: number, from: number) => {
     if (node === req.start) return 0;
@@ -185,30 +176,6 @@ export function route(ap: Airport, req: RouteRequest): RouteResult | null {
     const rw = ap.runwayNode.get(node);
     if (!rw) return 0;
     return rw === req.ownRunway ? OWN_RUNWAY : CROSSING;
-  };
-  // straight-line distance from the two ends of the movement, fixed per call
-  const dStart = new Float64Array(xy.length);
-  const dGoal = new Float64Array(xy.length);
-  for (let i = 0; i < xy.length; i++) {
-    dStart[i] = dist(xy[i], xy[req.start]);
-    dGoal[i] = dist(xy[i], xy[req.goal]);
-  }
-  const apronLocalPenalty = (node: number, ref: number) =>
-    APRON_LOCAL(ap.refs[ref]) && dStart[node] > APRON_LOCAL_RADIUS && dGoal[node] > APRON_LOCAL_RADIUS
-      ? APRON_LOCAL_PENALTY
-      : 1;
-  // the diagonal direction of the whole movement picks C (north-east) or K
-  // (south-west); only the through section east of the piers is affected
-  const oneWayPrefer = Math.abs(xy[req.goal][1] - xy[req.start][1]) >= ONE_WAY_MIN_DY
-    ? (xy[req.goal][1] > xy[req.start][1] ? "C" : "K")
-    : null;
-  const oneWayPenalty = (from: number, to: number, ref: number) => {
-    if (!oneWayPrefer) return 1;
-    const name = ap.refs[ref];
-    if ((name !== "C" && name !== "K") || name === oneWayPrefer) return 1;
-    if ((xy[from][0] + xy[to][0]) / 2 < ONE_WAY_MIN_X) return 1;
-    if (dStart[to] <= APRON_LOCAL_RADIUS || dGoal[to] <= APRON_LOCAL_RADIUS) return 1;
-    return ONE_WAY_PENALTY;
   };
   // -> [new progress, length multiplier, flat extra cost]
   const step = (k: number, ref: number): [number, number, number] => {
@@ -279,8 +246,8 @@ export function route(ap: Airport, req: RouteRequest): RouteResult | null {
         if (ang > MAX_TURN && ap.edgeLen[e] > 12 && ap.edgeLen[e2] > 12) continue;
         const [k2, mult, extra] = step(k, ap.edgeRef[e2]);
         const g2 = passed || (req.mustPass !== undefined && to === req.mustPass && (req.mustPassRef === undefined || ap.edgeRef[e2] === req.mustPassRef)) ? 1 : 0;
-        const nc = c + ap.edgeLen[e2] * mult * apronLocalPenalty(to, ap.edgeRef[e2])
-          * oneWayPenalty(node, to, ap.edgeRef[e2]) + extra + nodePenalty(to, node)
+        const m = extraMult ? extraMult(node, to, ap.edgeRef[e2]) : 1;
+        const nc = c + ap.edgeLen[e2] * mult * m + extra + nodePenalty(to, node)
           + ang * TURN_ALL + Math.max(0, ang - 45) * TURN_COST + refChange(ap.edgeRef[e], ap.edgeRef[e2]);
         const s2 = (e2 * K + k2) * G + g2;
         if (nc < cost[s2]) { cost[s2] = nc; prev[s2] = s; heap.push(nc, s2); }
@@ -313,10 +280,11 @@ export function route(ap: Airport, req: RouteRequest): RouteResult | null {
     const nodes = [ap.edgeFrom[f.edges[0]], ...f.edges.map((e) => ap.edgeTo[e])];
     const refs = f.edges.map((e) => ap.refs[ap.edgeRef[e]]);
     const length = f.edges.reduce((a, e) => a + ap.edgeLen[e], 0);
-    // report every published taxiway the path never touched, including one that
-    // the search jumped over instead of detouring to reach it
-    const used = new Set(refs);
-    return { nodes, refs, length, missed: req.via.filter((v) => !used.has(v)) };
+    if (hooks.reportAllUnusedVia) {
+      const used = new Set(refs);
+      return { nodes, refs, length, missed: req.via.filter((v) => !used.has(v)) };
+    }
+    return { nodes, refs, length, missed: req.via.slice(f.k) };
   }
 }
 

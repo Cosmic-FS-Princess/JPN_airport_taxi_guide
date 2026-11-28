@@ -14,5 +14,5 @@
     "skipLibCheck": true,
     "types": ["vite/client"]
   },
-  "include": ["src", "haneda/src", "narita/src"]
+  "include": ["src", "haneda/src", "narita/src", "rjoo/src", "rjbb/src", "roah/src", "rjcc/src"]
 }

@@ -61,6 +61,24 @@ pnpm data:rjbb                                                   # regenerate sr
 
 `scripts/build-data.ts` merges the first two into `src/data/rjbb.json` (local metric coordinates around the ARP).
 
+## Project layout
+
+Core graph, routing, SVG map and UI controller live in `../src/shared/`; this directory holds the
+Kansai-specific dataset, taxi logic and configuration:
+
+```
+index.html            app shell
+src/main.ts           guide config calling ../src/shared/guide.ts
+src/airport.ts        RJBB Airport config extending ../src/shared/airport.ts
+src/plan.ts           selection → routed options via ../src/shared/plan.ts
+src/procedures.ts     standard flows and taxi templates per runway / apron
+src/i18n.ts           Kansai-specific English / Japanese strings
+src/data/rjbb.json    compiled metric airport graph
+scripts/              nav data extract, OSM fetch, data build, route & loop tests
+data/navdata/         runway records extracted from X-Plane Custom Data
+RJBB.png              app icon
+```
+
 ## Licence
 
 GNU General Public License v2.0 — see [../LICENSE](../LICENSE).

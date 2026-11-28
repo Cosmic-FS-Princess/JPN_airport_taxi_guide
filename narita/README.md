@@ -43,7 +43,7 @@ taxi logic.
 
 ## Getting started
 
-This guide is the Narita half of the combined [JPN Airport Taxi Guides](../README.md) site: the
+This guide is part of the combined [JPN Airport Taxi Guides](../README.md) site: the
 chooser at the repository root links to it. Install and run once at the repository root:
 
 ```bash
@@ -51,8 +51,8 @@ pnpm install
 pnpm dev
 ```
 
-Chooser and both guides are served together. `pnpm build` produces the static site in `dist/`,
-`pnpm test` routes every flow / runway / terminal combination as a smoke test, and
+Chooser and all guides are served together. `pnpm build` produces the static site in `dist/`,
+`pnpm test:narita` routes every flow / runway / terminal combination as a smoke test, and
 `pnpm test:extras` sweeps every stand on every runway. All data the app needs is already in the
 repository, so no X-Plane install is required to run it.
 
@@ -224,19 +224,21 @@ available from the entry chips (e.g. A2 on 16R).
 
 ## Project layout
 
+Core graph, routing, SVG map and UI controller live in `../src/shared/`; this directory holds the
+Narita-specific dataset, gateway/LVP routing and configuration:
+
 ```
 index.html            app shell
-src/main.ts           UI state and panel rendering
-src/map.ts            SVG map, grid, pan/zoom
-src/router.ts         template-constrained Dijkstra and turn-by-turn steps
-src/plan.ts           selection → routed options
-src/procedures.ts     published taxi routes per runway / terminal
-src/airport.ts        graph model, runway exits and entries
-src/i18n.ts           English / Japanese strings
-scripts/              OSM fetch, data build, route smoke tests
+src/main.ts           guide config calling ../src/shared/guide.ts
+src/airport.ts        RJAA Airport config extending ../src/shared/airport.ts
+src/plan.ts           selection → routed options (gateways, LVP, T/S & C/K rules)
+src/procedures.ts     published AIP departure routes & LVP rules
+src/i18n.ts           Narita-specific English / Japanese strings
+src/data/rjaa.json    compiled metric airport graph
+scripts/              OSM fetch, data build, route, sweep & apron-rule tests
 data/navdata/         runway records from AIP Japan
 data/osm-rjaa.json    OSM aeroway extract
-public/RJAA.png       app icon
+RJAA.png              app icon
 ```
 
 ## Licence
@@ -245,7 +247,7 @@ Copyright (C) 2026 xiaotian7196.
 
 This project is free software, released under the **GNU General Public License, version 2**
 (SPDX: `GPL-2.0-only`). You may copy, modify and redistribute it under the terms of that licence; the
-full text is in [LICENSE](LICENSE).
+full text is in [../LICENSE](../LICENSE).
 
 It is distributed in the hope that it will be useful, but **without any warranty**, without even the
 implied warranty of merchantability or fitness for a particular purpose. See the GNU General Public
