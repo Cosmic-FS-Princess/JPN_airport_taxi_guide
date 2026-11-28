@@ -1,4 +1,4 @@
-// Airport chooser: bilingual copy, language switch and the two airport diagrams.
+// Airport chooser: bilingual copy, language switch and the three airport diagrams.
 import "./style.css";
 import "./chooser.css";
 import { PREVIEWS } from "./previews.ts";
@@ -7,13 +7,13 @@ type Lang = "en" | "ja";
 type Text = Record<Lang, string>;
 
 const S = {
-  pageTitle: { en: "Japan Airport Taxi Guides — Haneda & Narita", ja: "日本の空港タクシーガイド — 羽田・成田" },
+  pageTitle: { en: "Japan Airport Taxi Guides — Haneda, Narita & Osaka Itami", ja: "日本の空港タクシーガイド — 羽田・成田・伊丹" },
   langLabel: { en: "Language", ja: "言語" },
   airportsLabel: { en: "Airport taxi guides", ja: "空港タクシーガイド" },
   heading: { en: "Airport taxi guides", ja: "空港タクシーガイド" },
   lede: {
-    en: "Haneda and Narita, one guide each. Pick an airport for standard arrival and departure taxi routes, runway exits, apron gateways and turn-by-turn taxiing.",
-    ja: "羽田と成田、それぞれのガイドを用意しています。空港を選ぶと、標準の到着・出発タキシールート、離脱誘導路、エプロンゲート、ターンバイターンの指示を地図で確認できます。",
+    en: "Haneda, Narita and Itami, one guide each. Pick an airport for standard arrival and departure taxi routes, runway exits, apron gateways and turn-by-turn taxiing.",
+    ja: "羽田・成田・伊丹、それぞれのガイドを用意しています。空港を選ぶと、標準の到着・出発タキシールート、離脱誘導路、エプロンゲート、ターンバイターンの指示を地図で確認できます。",
   },
   openGuide: { en: "Open guide", ja: "ガイドを開く" },
   hanedaName: { en: "Haneda", ja: "羽田" },
@@ -28,9 +28,16 @@ const S = {
     en: "Parallel 16R/34R and 16L/34L. AIP Japan departure routes, apron gateways, and CAT II/III low-visibility taxiing.",
     ja: "16R/34R と 16L/34L の並行滑走路。AIP Japan の出発ルート、エプロンゲート、CAT II/III の低視程運用に対応しています。",
   },
+  rjooName: { en: "Itami", ja: "伊丹" },
+  rjooCode: { en: "RJOO · Osaka International", ja: "RJOO · 大阪国際空港" },
+  rjooDesc: {
+    en: "Parallel 14L/32R and 14R/32L. North- and south-wind configurations, standard runway crossings and published arrival and departure routes.",
+    ja: "14L/32R と 14R/32L の並行滑走路。北風・南風の運用、標準的な滑走路横断、到着・出発のタキシールートに対応しています。",
+  },
   tagRunways4: { en: "4 runways", ja: "滑走路4本" },
   tagRunways2: { en: "2 runways", ja: "滑走路2本" },
   tagTerminals3: { en: "3 terminals", ja: "ターミナル3" },
+  tagTerminals1: { en: "1 terminal", ja: "ターミナル1" },
   tagFlows: { en: "North / South", ja: "北風 / 南風" },
   tagLvp: { en: "CAT II/III", ja: "CAT II/III" },
   simDisclaimer: {

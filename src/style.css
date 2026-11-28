@@ -245,8 +245,8 @@ body[data-base="none"] #attribution .row:first-child > .sep { display: none; }
 .map-controls button[aria-pressed="true"] { color: var(--blue); }
 .map-controls svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
 #compass {
-  position: fixed; right: 16px; top: 208px; width: 44px; height: 44px; border-radius: 50%;
-  display: grid; place-items: center; font: 700 13px var(--font-display); color: var(--red); z-index: 5;
+  position: fixed; right: 16px; top: 260px; width: 44px; height: 44px; border-radius: 50%;
+  display: grid; place-items: center; font: 700 13px var(--font-display); color: var(--red); z-index: 5; pointer-events: none;
 }
 #scale { position: fixed; right: 16px; bottom: 16px; display: flex; align-items: center; gap: 8px; z-index: 5; font: 600 11px var(--font); color: var(--label-2); }
 #scale-bar { height: 6px; border: 2px solid var(--label-2); border-top: 0; }
@@ -404,7 +404,7 @@ footer::before { content: ""; display: block; border-top: 0.5px solid var(--sepa
   header h1 { font-size: 20px; }
   .map-controls { right: 12px; top: 12px; }
   .map-controls.second { top: 108px; }
-  #compass { right: 12px; top: 204px; }
+  #compass { right: 12px; top: 256px; }
   #scale { top: 12px; left: 12px; right: auto; bottom: auto; }
   #attribution { top: 32px; left: 12px; right: auto; bottom: auto; }
   #disclaimer { top: 68px; left: 12px; right: auto; bottom: auto; text-align: left; }

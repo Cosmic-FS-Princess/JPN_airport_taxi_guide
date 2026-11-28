@@ -1,8 +1,8 @@
 # JPN Airport Taxi Guides
 
-An Apple-style, full-screen taxi route guide for the two Tokyo airports — **Haneda (RJTT)** and
-**Narita (RJAA)** — built for flight simulation. The site opens on an airport chooser; each guide
-keeps its own map, runway configurations, stands and published taxi logic.
+An Apple-style, full-screen taxi route guide for three Japanese airports — **Haneda (RJTT)**,
+**Narita (RJAA)** and **Osaka Itami (RJOO)** — built for flight simulation. The site opens on an
+airport chooser; each guide keeps its own map, runway configurations, stands and published taxi logic.
 
 **Live:** <https://jpntaxi.ソラ.jp/> (punycode `jpntaxi.xn--3ckue.jp`)
 
@@ -18,18 +18,18 @@ On a phone the airport cards stack into one column:
 
 > For flight simulation only. Not for real-world navigation. ATC instructions always take precedence.
 
-## The two guides
+## The three guides
 
-| | Haneda | Narita |
-| --- | --- | --- |
-| Code | RJTT · Tokyo International | RJAA · Narita International |
-| Runways | 16R/34L, 16L/34R, 04/22, 05/23 | 16R/34L, 16L/34R |
-| Flows | North, South · Bay, South · City | South, North |
-| Extras | three terminals, published exits for every runway | AIP departure routes, apron gateways, CAT II/III LVP |
-| Details | [haneda/README.md](haneda/README.md) | [narita/README.md](narita/README.md) |
+| | Haneda | Narita | Osaka Itami |
+| --- | --- | --- | --- |
+| Code | RJTT · Tokyo International | RJAA · Narita International | RJOO · Osaka International |
+| Runways | 16R/34L, 16L/34R, 04/22, 05/23 | 16R/34L, 16L/34R | 14L/32R, 14R/32L |
+| Flows | North, South · Bay, South · City | South, North | North, South |
+| Extras | three terminals, published exits for every runway | AIP departure routes, apron gateways, CAT II/III LVP | standard runway crossings, published arrival/departure routes |
+| Details | [haneda/README.md](haneda/README.md) | [narita/README.md](narita/README.md) | [rjoo/README.md](rjoo/README.md) |
 
-Both guides share the same map, grid, router technique and UI, but keep the data and taxi logic of
-their own airport.
+All three guides share the same map, grid, router technique and UI, but keep the data and taxi logic
+of their own airport.
 
 ## Getting started
 
@@ -37,19 +37,20 @@ Requirements: Node.js 22.6+ (the data and test scripts run TypeScript directly) 
 
 ```bash
 pnpm install
-pnpm dev      # chooser at /, guides at /haneda/ and /narita/
+pnpm dev      # chooser at /, guides at /haneda/, /narita/ and /rjoo/
 pnpm build    # static site in dist/
 pnpm preview  # serve the production build
-pnpm test     # route smoke tests for both airports
+pnpm test     # route smoke tests for all three airports
 ```
 
-`pnpm test:extras` also sweeps every stand on every runway and lists winding routes. All data the
-apps need is already in the repository, so no X-Plane install is required.
+`pnpm test:extras` also sweeps every stand on every runway and lists winding routes. The RJOO smoke
+test covers all 56 stands in both arrival and departure mode. All data the apps need is already in the
+repository, so no X-Plane install is required.
 
 ### Refreshing the airport data
 
-Each guide keeps its own data pipeline under `haneda/scripts/` and `narita/scripts/`. From the
-repository root:
+Each guide keeps its own data pipeline under `haneda/scripts/`, `narita/scripts/` and `rjoo/scripts/`.
+From the repository root:
 
 ```bash
 pnpm extract:navdata:haneda -- "<path to X-Plane 12/Custom Data>"  # new AIRAC cycle
@@ -58,6 +59,10 @@ pnpm data:haneda                                                   # regenerate 
 
 pnpm fetch:osm:narita
 pnpm data:narita
+
+pnpm extract:navdata:rjoo -- "<path to X-Plane 12/Custom Data>"
+pnpm fetch:osm:rjoo
+pnpm data:rjoo
 ```
 
 The chooser diagrams are rendered from the same `src/data/*.json` files; regenerate them after a data
@@ -68,7 +73,8 @@ pnpm previews   # rewrites src/previews.ts
 ```
 
 For Narita, runway records come from AIP Japan (`data/navdata/RJAA.dat`); see
-[narita/README.md](narita/README.md) for the source conventions.
+[narita/README.md](narita/README.md) for the source conventions. RJOO uses X-Plane CIFP runway
+records and the Squawk.ID landing/departure guides; see [rjoo/README.md](rjoo/README.md).
 
 ## Repository layout
 
@@ -76,15 +82,16 @@ For Narita, runway records come from AIP Japan (`data/navdata/RJAA.dat`); see
 index.html               chooser (bilingual, light/dark, live airport diagrams)
 src/chooser.ts           chooser logic: language, links, diagrams
 src/chooser.css          chooser styling
-src/style.css            shared design system used by the chooser and both guides
+src/style.css            shared design system used by the chooser and all guides
 src/previews.ts          generated airport diagrams (scripts/make-previews.mjs)
 haneda/                  Haneda guide: index.html, src/, data/, scripts/
 narita/                  Narita guide: index.html, src/, data/, scripts/, docs/
+rjoo/                    Osaka Itami guide: index.html, src/, data/, scripts/
 scripts/make-previews.mjs  renders the chooser diagrams from the guides' data
 scripts/publish-pages.mjs  publishes dist/ to the gh-pages branch
 ```
 
-The three pages are built together by Vite (`vite.config.ts`, multi-page input). `base` is `./`, so
+The four pages are built together by Vite (`vite.config.ts`, multi-page input). `base` is `./`, so
 the same `dist/` works on a custom domain and under a `github.io/<repo>/` subpath.
 
 ## Deployment
@@ -121,10 +128,12 @@ If you prefer GitHub Actions instead, add a workflow that runs `pnpm install --f
 
 Taxi logic for Haneda follows Kono_Hana, “Tokyo International (Haneda) departure & arrival taxi
 overview”; the Narita departure routes follow AIP Japan RJAA AD 2.22 (V) and the AD 2.20 taxiing
-charts. See each guide's README for details.
+charts. Osaka Itami follows the Squawk.ID RJOO landing and departure guides. See each guide's README
+for details.
 
 ## Licence
 
-GNU General Public License v2.0 — see [LICENSE](LICENSE). The two guides were merged from
-[Haneda_taxi_route_manual](https://github.com/xiaotian7196/Haneda_taxi_route_manual) and
-[Narita_Taxi_Guide](https://github.com/xiaotian7196/Narita_Taxi_Guide).
+GNU General Public License v2.0 — see [LICENSE](LICENSE). The three guides were merged from
+[Haneda_taxi_route_manual](https://github.com/xiaotian7196/Haneda_taxi_route_manual),
+[Narita_Taxi_Guide](https://github.com/xiaotian7196/Narita_Taxi_Guide) and
+[Osaka_Itami_taxi_route_manual](https://github.com/xiaotian7196/Osaka_Itami_taxi_route_manual).

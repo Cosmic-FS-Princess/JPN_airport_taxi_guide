@@ -22,6 +22,12 @@ const AIRPORTS = [
     // a standard arrival drawn on the preview: 16R -> T2 stand 61
     plan: { mode: "arr", flow: "S", runway: "16R", stand: "61" },
   },
+  {
+    key: "rjoo",
+    file: "rjoo/src/data/rjoo.json",
+    // a standard arrival drawn on the preview: 14R -> Spot 15
+    plan: { mode: "arr", flow: "S", runway: "14R", stand: "15" },
+  },
 ];
 
 async function sampleRoute(key, data, request) {
