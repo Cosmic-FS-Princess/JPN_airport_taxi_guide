@@ -1,8 +1,8 @@
 # JPN Airport Taxi Guides
 
-An Apple-style, full-screen taxi route guide for three Japanese airports — **Haneda (RJTT)**,
-**Narita (RJAA)** and **Osaka Itami (RJOO)** — built for flight simulation. The site opens on an
-airport chooser; each guide keeps its own map, runway configurations, stands and published taxi logic.
+An Apple-style, full-screen taxi route guide for five Japanese airports — **Haneda (RJTT)**,
+**Narita (RJAA)**, **Osaka Itami (RJOO)**, **Kansai (RJBB)** and **Naha (ROAH)** — built for flight simulation. The site
+opens on an airport chooser; each guide keeps its own map, runway configurations, stands and published taxi logic.
 
 **Live:** <https://jpntaxi.ソラ.jp/> (punycode `jpntaxi.xn--3ckue.jp`)
 
@@ -18,17 +18,17 @@ On a phone the airport cards stack into one column:
 
 > For flight simulation only. Not for real-world navigation. ATC instructions always take precedence.
 
-## The three guides
+## The five guides
 
-| | Haneda | Narita | Osaka Itami |
-| --- | --- | --- | --- |
-| Code | RJTT · Tokyo International | RJAA · Narita International | RJOO · Osaka International |
-| Runways | 16R/34L, 16L/34R, 04/22, 05/23 | 16R/34L, 16L/34R | 14L/32R, 14R/32L |
-| Flows | North, South · Bay, South · City | South, North | North, South |
-| Extras | three terminals, published exits for every runway | AIP departure routes, apron gateways, CAT II/III LVP | standard runway crossings, published arrival/departure routes |
-| Details | [haneda/README.md](haneda/README.md) | [narita/README.md](narita/README.md) | [rjoo/README.md](rjoo/README.md) |
+| | Haneda | Narita | Osaka Itami | Kansai | Naha |
+| --- | --- | --- | --- | --- | --- |
+| Code | RJTT · Tokyo International | RJAA · Narita International | RJOO · Osaka International | RJBB · Kansai International | ROAH · Naha Airport |
+| Runways | 16R/34L, 16L/34R, 04/22, 05/23 | 16R/34L, 16L/34R | 14L/32R, 14R/32L | 06R/24L, 06L/24R | 18L/36R, 18R/36L |
+| Flows | North, South · Bay, South · City | South, North | North, South | North (06), South (24) | North (36), South (18) |
+| Extras | three terminals, published exits for every runway | AIP departure routes, apron gateways, CAT II/III LVP | standard runway crossings, published arrival/departure routes | two islands linked by J3/J4 bridges, T1/T2 & cargo aprons | offshore Runway 2, J1/J2 bridges, standard runway crossings |
+| Details | [haneda/README.md](haneda/README.md) | [narita/README.md](narita/README.md) | [rjoo/README.md](rjoo/README.md) | [rjbb/README.md](rjbb/README.md) | [roah/README.md](roah/README.md) |
 
-All three guides share the same map, grid, router technique and UI, but keep the data and taxi logic
+All five guides share the same map, grid, router technique and UI, but keep the data and taxi logic
 of their own airport.
 
 ## Getting started
@@ -37,19 +37,19 @@ Requirements: Node.js 22.6+ (the data and test scripts run TypeScript directly) 
 
 ```bash
 pnpm install
-pnpm dev      # chooser at /, guides at /haneda/, /narita/ and /rjoo/
+pnpm dev      # chooser at /, guides at /haneda/, /narita/, /rjoo/, /rjbb/ and /roah/
 pnpm build    # static site in dist/
 pnpm preview  # serve the production build
-pnpm test     # route smoke tests for all three airports
+pnpm test     # route smoke tests for all five airports
 ```
 
-`pnpm test:extras` also sweeps every stand on every runway and lists winding routes. The RJOO smoke
-test covers all 56 stands in both arrival and departure mode. All data the apps need is already in the
-repository, so no X-Plane install is required.
+`pnpm test:extras` also sweeps every stand on every runway and lists winding routes. The RJOO, RJBB
+and ROAH smoke tests cover every stand (56, 113 and 33 stands respectively) in both arrival and
+departure mode. All data the apps need is already in the repository, so no X-Plane install is required.
 
 ### Refreshing the airport data
 
-Each guide keeps its own data pipeline under `haneda/scripts/`, `narita/scripts/` and `rjoo/scripts/`.
+Each guide keeps its own data pipeline under `haneda/scripts/`, `narita/scripts/`, `rjoo/scripts/`, `rjbb/scripts/` and `roah/scripts/`.
 From the repository root:
 
 ```bash
@@ -63,6 +63,14 @@ pnpm data:narita
 pnpm extract:navdata:rjoo -- "<path to X-Plane 12/Custom Data>"
 pnpm fetch:osm:rjoo
 pnpm data:rjoo
+
+pnpm extract:navdata:rjbb -- "<path to X-Plane 12/Custom Data>"
+pnpm fetch:osm:rjbb
+pnpm data:rjbb
+
+pnpm extract:navdata:roah -- "<path to X-Plane 12/Custom Data>"
+pnpm fetch:osm:roah
+pnpm data:roah
 ```
 
 The chooser diagrams are rendered from the same `src/data/*.json` files; regenerate them after a data
@@ -87,11 +95,13 @@ src/previews.ts          generated airport diagrams (scripts/make-previews.mjs)
 haneda/                  Haneda guide: index.html, src/, data/, scripts/
 narita/                  Narita guide: index.html, src/, data/, scripts/, docs/
 rjoo/                    Osaka Itami guide: index.html, src/, data/, scripts/
+rjbb/                    Kansai guide: index.html, src/, data/, scripts/
+roah/                    Naha guide: index.html, src/, data/, scripts/
 scripts/make-previews.mjs  renders the chooser diagrams from the guides' data
 scripts/publish-pages.mjs  publishes dist/ to the gh-pages branch
 ```
 
-The four pages are built together by Vite (`vite.config.ts`, multi-page input). `base` is `./`, so
+The six pages are built together by Vite (`vite.config.ts`, multi-page input). `base` is `./`, so
 the same `dist/` works on a custom domain and under a `github.io/<repo>/` subpath.
 
 ## Deployment

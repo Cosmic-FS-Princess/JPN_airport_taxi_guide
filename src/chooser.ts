@@ -1,4 +1,4 @@
-// Airport chooser: bilingual copy, language switch and the three airport diagrams.
+// Airport chooser: bilingual copy, language switch and the five airport diagrams.
 import "./style.css";
 import "./chooser.css";
 import { PREVIEWS } from "./previews.ts";
@@ -7,13 +7,13 @@ type Lang = "en" | "ja";
 type Text = Record<Lang, string>;
 
 const S = {
-  pageTitle: { en: "Japan Airport Taxi Guides — Haneda, Narita & Osaka Itami", ja: "日本の空港タクシーガイド — 羽田・成田・伊丹" },
+  pageTitle: { en: "Japan Airport Taxi Guides — Haneda, Narita, Itami, Kansai & Naha", ja: "日本の空港タクシーガイド — 羽田・成田・伊丹・関西・那覇" },
   langLabel: { en: "Language", ja: "言語" },
   airportsLabel: { en: "Airport taxi guides", ja: "空港タクシーガイド" },
   heading: { en: "Airport taxi guides", ja: "空港タクシーガイド" },
   lede: {
-    en: "Haneda, Narita and Itami, one guide each. Pick an airport for standard arrival and departure taxi routes, runway exits, apron gateways and turn-by-turn taxiing.",
-    ja: "羽田・成田・伊丹、それぞれのガイドを用意しています。空港を選ぶと、標準の到着・出発タキシールート、離脱誘導路、エプロンゲート、ターンバイターンの指示を地図で確認できます。",
+    en: "Haneda, Narita, Itami, Kansai and Naha, one guide each. Pick an airport for standard arrival and departure taxi routes, runway exits, apron gateways and turn-by-turn taxiing.",
+    ja: "羽田・成田・伊丹・関西・那覇、それぞれのガイドを用意しています。空港を選ぶと、標準の到着・出発タキシールート、離脱誘導路、エプロンゲート、ターンバイターンの指示を地図で確認できます。",
   },
   openGuide: { en: "Open guide", ja: "ガイドを開く" },
   hanedaName: { en: "Haneda", ja: "羽田" },
@@ -34,9 +34,22 @@ const S = {
     en: "Parallel 14L/32R and 14R/32L. North- and south-wind configurations, standard runway crossings and published arrival and departure routes.",
     ja: "14L/32R と 14R/32L の並行滑走路。北風・南風の運用、標準的な滑走路横断、到着・出発のタキシールートに対応しています。",
   },
+  rjbbName: { en: "Kansai", ja: "関西" },
+  rjbbCode: { en: "RJBB · Kansai International", ja: "RJBB · 関西国際空港" },
+  rjbbDesc: {
+    en: "Two artificial islands in Osaka Bay. Parallel 06R/24L and 06L/24R, inter-island J3/J4 bridges, and standard arrival and departure taxi routes.",
+    ja: "大阪湾の2つの人工島。06R/24L と 06L/24R の並行滑走路、島間を結ぶ J3/J4 連絡誘導路、標準の到着・出発タキシールートに対応しています。",
+  },
+  roahName: { en: "Naha", ja: "那覇" },
+  roahCode: { en: "ROAH · Naha Airport", ja: "ROAH · 那覇空港" },
+  roahDesc: {
+    en: "Inboard 18L/36R and offshore 18R/36L in Okinawa. Seawall J1/J2 bridges, standard runway crossings and domestic, international and cargo aprons.",
+    ja: "沖縄の陸側 18L/36R と沖合 18R/36L の並行滑走路。J1/J2 連絡誘導路、標準的な滑走路横断、国内線・国際線・貨物エプロンに対応しています。",
+  },
   tagRunways4: { en: "4 runways", ja: "滑走路4本" },
   tagRunways2: { en: "2 runways", ja: "滑走路2本" },
   tagTerminals3: { en: "3 terminals", ja: "ターミナル3" },
+  tagTerminals2: { en: "2 terminals", ja: "ターミナル2" },
   tagTerminals1: { en: "1 terminal", ja: "ターミナル1" },
   tagFlows: { en: "North / South", ja: "北風 / 南風" },
   tagLvp: { en: "CAT II/III", ja: "CAT II/III" },

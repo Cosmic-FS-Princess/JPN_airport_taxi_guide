@@ -1,5 +1,5 @@
 /* Chooser page. Reuses the guides' design system (src/style.css) so the landing
-   page and the three guides read as one product: same colours, glass panels,
+   page and the five guides read as one product: same colours, glass panels,
    SF-based type ramp, segmented control and map styling. */
 
 html:has(body.chooser) {
@@ -102,6 +102,14 @@ body.chooser {
 
 .airport:nth-child(3) {
   animation-delay: 0.14s;
+}
+
+.airport:nth-child(4) {
+  animation-delay: 0.21s;
+}
+
+.airport:nth-child(5) {
+  animation-delay: 0.28s;
 }
 
 @keyframes rise {

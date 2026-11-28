@@ -28,6 +28,18 @@ const AIRPORTS = [
     // a standard arrival drawn on the preview: 14R -> Spot 15
     plan: { mode: "arr", flow: "S", runway: "14R", stand: "15" },
   },
+  {
+    key: "rjbb",
+    file: "rjbb/src/data/rjbb.json",
+    // a standard departure crossing the inter-island bridge: T1 Spot 20 -> 06L
+    plan: { mode: "dep", flow: "N", runway: "06L", stand: "20" },
+  },
+  {
+    key: "roah",
+    file: "roah/src/data/roah.json",
+    // a standard arrival from offshore Runway 2 across Runway 1: 36L -> Spot 25
+    plan: { mode: "arr", flow: "N", runway: "36L", stand: "25" },
+  },
 ];
 
 async function sampleRoute(key, data, request) {

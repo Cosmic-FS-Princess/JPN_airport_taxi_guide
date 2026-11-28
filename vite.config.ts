@@ -1,7 +1,7 @@
 import { defineConfig } from "vite";
 import { fileURLToPath } from "node:url";
 
-// Four static pages are published together: the airport chooser and the three
+// Six static pages are published together: the airport chooser and the five
 // guides. Relative asset paths (base: "./") keep the same build working at a
 // custom domain root and under the default github.io project subpath.
 // Keep the dev server from watching transient files (editor temp dirs, the
@@ -17,6 +17,8 @@ export default defineConfig({
         haneda: fileURLToPath(new URL("./haneda/index.html", import.meta.url)),
         narita: fileURLToPath(new URL("./narita/index.html", import.meta.url)),
         rjoo: fileURLToPath(new URL("./rjoo/index.html", import.meta.url)),
+        rjbb: fileURLToPath(new URL("./rjbb/index.html", import.meta.url)),
+        roah: fileURLToPath(new URL("./roah/index.html", import.meta.url)),
       },
     },
   },
